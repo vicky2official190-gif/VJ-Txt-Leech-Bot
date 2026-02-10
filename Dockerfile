@@ -1,15 +1,30 @@
-# Don't Remove Credit @VJ_Bots
-# Subscribe YouTube Channel For Amazing Bot @Tech_VJ
-# Ask Doubt on telegram @KingVJ01
+FROM python:3.10-slim
 
-FROM python:3.10.8-slim-buster
-RUN apt-get update -y && apt-get upgrade -y \
-    && apt-get install -y --no-install-recommends gcc libffi-dev musl-dev ffmpeg aria2 python3-pip \
+# Prevent interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install required system packages
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    gcc \
+    libffi-dev \
+    ffmpeg \
+    aria2 \
+    curl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY . /app/
-WORKDIR /app/
-RUN pip3 install --no-cache-dir --upgrade --requirement requirements.txt
-CMD gunicorn app:app & python3 main.py
+# Set working directory
+WORKDIR /app
 
+# Copy project files
+COPY . /app
+
+# Upgrade pip
+RUN pip install --no-cache-dir --upgrade pip
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Start bot
+CMD ["python", "main.py"]
