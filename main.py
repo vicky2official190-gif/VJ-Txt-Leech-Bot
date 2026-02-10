@@ -214,3 +214,17 @@ async def upload(bot: Client, m: Message):
 
 
 bot.run()
+import threading
+from flask import Flask
+import os
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Bot Running"
+
+def run():
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
+
+threading.Thread(target=run).start()
