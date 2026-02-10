@@ -213,7 +213,6 @@ async def upload(bot: Client, m: Message):
     await m.reply_text("**𝔻ᴏɴᴇ 𝔹ᴏ𝕤𝕤😎**")
 
 
-bot.run()
 import threading
 from flask import Flask
 import os
@@ -224,7 +223,12 @@ app = Flask(__name__)
 def home():
     return "Bot Running"
 
-def run():
+def run_web():
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
 
-threading.Thread(target=run).start()
+# Start web server in separate thread
+threading.Thread(target=run_web).start()
+
+# Then start bot
+bot.run()
+
