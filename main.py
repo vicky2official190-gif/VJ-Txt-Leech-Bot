@@ -217,18 +217,19 @@ import threading
 from flask import Flask
 import os
 
-app = Flask(__name__)
+app_web = Flask(__name__)
 
-@app.route('/')
+@app_web.route("/")
 def home():
     return "Bot Running"
 
 def run_web():
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
+    port = int(os.environ.get("PORT"))   # ❗ NO default 10000
+    app_web.run(host="0.0.0.0", port=port)
 
-# Start web server in separate thread
-threading.Thread(target=run_web).start()
+if __name__ == "__main__":
+    t = threading.Thread(target=run_web)
+    t.daemon = True
+    t.start()
 
-# Then start bot
-bot.run()
-
+    bot.run()
